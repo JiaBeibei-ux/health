@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haowaner.dao.MemberDao">
+   <!--通过手机号查询-->
+    <select id="findByTel" parameterType="String" resultType="member">
+        select * from t_member where phoneNumber=#{telephone}
+    </select>
+    <!--根据日期统计会员数，统计制定日期之前的会员数-->
+    <select id="findMemberCountByMonth" parameterType="string" resultType="int">
+        select * from t_member where regTime >= #{value}
+    </select>
+    <!--根据日期统计会员数，统计指定日期之前的会员数-->
+    <select id="findMemberCountBeforeDate" parameterType="string" resultType="int">
+        select count(id) from t_member where regTime &lt;= #{value}
+    </select>
+    <!--根据日期统计会员数-->
+    <select id="findMemberCountByDate" parameterType="string" resultType="int">
+        select count(id) from t_member where regTime = #{value}
+    </select>
+    <!--根据日期统计会员数，统计指定日期之后的会员数-->
+    <select id="findMemberCountAfterDate" parameterType="string" resultType="int">
+        select count(id) from t_member where regTime &gt;= #{value}
+    </select>
+    <!--总会员数-->
+    <select id="findMemberTotalCount" resultType="int">
+      select count(id) from t_member
+    </select>
+    <!--添加-->
+    <insert id="add" parameterType="member">
+      insert into t_member (id,fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark)
+      values (null,#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
+    </insert>
+</mapper>

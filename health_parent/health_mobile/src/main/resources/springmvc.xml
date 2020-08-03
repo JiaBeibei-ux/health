@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--引入reids配置文件-->
+    <import resource="classpath:spring-redis.xml"></import>
+    <!--配置包扫描-->
+    <context:component-scan base-package="com.haowaner">
+        <!--只扫描controller-->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!--文件上传-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <property name="maxUploadSize" value="2097152"></property>
+    </bean>
+    <!--静态资源拦截-->
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+    <!--springmvc注解驱动-->
+    <mvc:annotation-driven>
+        <!--解决response相应乱码问题-->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="application/json;charset=UTF-8"></property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--定时任务使用quartz-->
+    <dubbo:application name="health_mobile"></dubbo:application>
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" check="false"></dubbo:registry>
+    <dubbo:annotation package="com.haowaner.controller"></dubbo:annotation>
+</beans>
